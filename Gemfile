@@ -57,6 +57,7 @@ group :development, :test do
   gem 'spring-commands-rspec'
   gem 'guard-rspec', '~> 4.7', '>= 4.7.3'
   gem 'capybara'
+  gem 'database_cleaner'
 end
 
 group :development do

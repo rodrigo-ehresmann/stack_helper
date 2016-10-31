@@ -33,7 +33,7 @@ RSpec.configure do |config|
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
-  config.use_transactional_fixtures = true
+  config.use_transactional_fixtures = false
 
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
@@ -66,4 +66,30 @@ RSpec.configure do |config|
 
   # Add warden method like 'login_as' to use in integration tests.
   config.include Warden::Test::Helpers
+
+  # Before the entire test suit runs, clear out the database.
+  config.before(:suite) do
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
+  # Set default strategy.
+  config.before(:each) do
+    DatabaseCleaner.strategy = :transaction
+  end
+
+  # For tests flagged with ':js => true', transaction strategy doesn't work.
+  # So set strategy to truncation.
+  config.before(:each, :js => true) do
+    DatabaseCleaner.strategy = :truncation
+  end
+
+  # Start database cleaner strategy before each test.
+  config.before(:each) do
+    DatabaseCleaner.start
+  end
+
+  # Clean the database after each test.
+  config.after(:each) do
+    DatabaseCleaner.clean
+  end
 end
